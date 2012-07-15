@@ -10,7 +10,7 @@
 
     });
     //dragging of swype-body within swype-container
-    $("#swyper").mousedown(function(event){
+    $("#swyper").vmousedown(function(event){
         if(!dragging)
         {
             dragging = true;
@@ -18,7 +18,7 @@
             lastBodyPosition = $(this).position().left;
         }
     });
-    $("#swyper").mouseup(function(event){
+    $("#swyper").vmouseup(function(event){
         if(dragging)
         {
             dragging = false;
@@ -36,7 +36,7 @@
             }
         }
     });
-    $("#swyper").mousemove(function(event){
+    $("#swyper").vmousemove(function(event){
         if(dragging)
         {
             //drag the swype-body
