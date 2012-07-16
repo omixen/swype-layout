@@ -10,39 +10,42 @@
 
     });
     //dragging of swype-body within swype-container
-    $("#swyper").vmousedown(function(event){
-        if(!dragging)
-        {
-            dragging = true;
-            lastMousePosition = event.pageX;
-            lastBodyPosition = $(this).position().left;
-        }
-    });
-    $("#swyper").vmouseup(function(event){
-        if(dragging)
-        {
-            dragging = false;
-            //slide into place
-            var posX = event.pageX;
-            if(posX < slideThreshold)
+    if(Modernizr.touch)
+    {
+        $("#swyper").live('ontouchstart', function(event){
+            if(!dragging)
             {
-                //slide to next if exist, if not slide back
-            }else if(posX > windowWidth-slideThreshold)
-            {
-                //slide to previous if exist, if not slide back
-            }else
-            {
-                //slide back
+                dragging = true;
+                lastMousePosition = event.pageX;
+                lastBodyPosition = $(this).position().left;
             }
-        }
-    });
-    $("#swyper").vmousemove(function(event){
-        if(dragging)
-        {
-            //drag the swype-body
-            var distance = event.pageX - lastMousePosition;
-            $(this).css("left", (lastBodyPosition+distance));s
-        }
-    });
-    //slide into place when
+        });
+        $("#swyper").live('ontouchstop', function(event){
+            if(dragging)
+            {
+                dragging = false;
+                //slide into place
+                var posX = event.pageX;
+                if(posX < slideThreshold)
+                {
+                    //slide to next if exist, if not slide back
+                }else if(posX > windowWidth-slideThreshold)
+                {
+                    //slide to previous if exist, if not slide back
+                }else
+                {
+                    //slide back
+                }
+            }
+        });
+        $("#swyper").live('ontouchmove', function(event){
+            if(dragging)
+            {
+                //drag the swype-body
+                var distance = event.pageX - lastMousePosition;
+                $(this).css("left", (lastBodyPosition+distance));s
+            }
+        });
+    }
+
 })(jQuery);

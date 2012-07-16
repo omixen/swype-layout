@@ -6,6 +6,9 @@ html, body
 {
     text-align:center;
     padding:10px;
+    position: fixed;
+    top: 0;
+
 }
 .swype-nav-bg
 {
