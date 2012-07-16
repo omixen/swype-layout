@@ -2,8 +2,8 @@
     var dragging = false;
     var windowWidth = $(window).width();
     var slideThreshold = 100;
-    var current = 0;
     var startX = 0;
+    var curX = 0;
     var startTouchTime = 0;
     var leftPadding = 450;
     var eachElement = 900;
@@ -51,8 +51,8 @@
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = (e.touches[0].pageX - startX)/totalWidth;
-                    $('#swyper').css('-webkit-transform', 'translate('+(leftPadding+distance)+'px, 0px)');
+                    var curX = curX+(e.touches[0].pageX - startX);
+                    $('#swyper').css('-webkit-transform', 'translate('+(curX)+'px, 0px)');
                 }
             });
         }else
