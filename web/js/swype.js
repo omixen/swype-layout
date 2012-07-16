@@ -10,6 +10,7 @@
         if(Modernizr.touch)
         {
             $('#swyper').on('touchstart', function(event){
+                event.preventDefault();
                 var e = event.originalEvent;
                 if(!dragging && e.touches.length == 1)
                 {
@@ -19,6 +20,7 @@
                 }
             });
             $('#swyper').on('touchstop', function(event){
+                event.preventDefault();
                 var e = event.originalEvent;
                 if(dragging)
                 {
