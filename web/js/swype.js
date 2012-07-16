@@ -10,8 +10,8 @@
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
-            alert("touch available!");
             $('#swyper').on('touchstart', function(event){
+                alert(dragging+ " " +event.touches.length+ " "+event.touches[0].x+$('#swyper').position().left);
                 if(!dragging && event.touches.length == 1)
                 {
                     dragging = true;
@@ -21,6 +21,7 @@
                 }
             });
             $('#swyper').on('touchstop', function(event){
+                alert(dragging+ " " +event.touches.length+ " "+event.touches[0].x+$('#swyper').position().left);
                 if(dragging)
                 {
                     dragging = false;
