@@ -10,20 +10,21 @@
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
+            alert("touch available!");
             $(document).on('#swyper', 'touchstart', function(event){
                 if(!dragging)
                 {
                     dragging = true;
                     lastMousePosition = event.touches[0].x;
-                    lastBodyPosition = $(this).position().left;
-                    alert(lastBodyPosition);
+                    lastBodyPosition = $('#swyper').position().left;
+                    alert(event.touches[0].x);
                 }
             });
             $(document).on('#swyper', 'touchstop', function(event){
-
                 if(dragging)
                 {
                     dragging = false;
+                    alert(event.touches[0].x);
                     /*
                     //slide into place
                     var posX = event.pageX;
@@ -46,7 +47,7 @@
                 {
                     //drag the swype-body
                     var distance = event.touches[0].x - lastMousePosition;
-                    $(this).css("left", (lastBodyPosition+distance));
+                    $('#swyper').css("left", (lastBodyPosition+distance));
                 }
                 event.preventDefault();
             });
