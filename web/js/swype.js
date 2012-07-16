@@ -12,7 +12,6 @@
         {
             alert("touch available!");
             $('#swyper').on('touchstart', function(event){
-                alert($('#swyper').position().left);
                 if(!dragging)
                 {
                     dragging = true;
@@ -22,11 +21,10 @@
                 }
             });
             $('#swyper').on('touchstop', function(event){
-                alert($('#swyper').position().left);
                 if(dragging)
                 {
                     dragging = false;
-                    alert(event.touches[0].x);
+                    alert(event.touches[0].x-lastMousePosition);
                      /*
                     //slide into place
                     var posX = event.pageX;
