@@ -14,14 +14,17 @@
                 if(!dragging)
                 {
                     dragging = true;
-                    lastMousePosition = event.pageX;
+                    lastMousePosition = event.touches[0].x;
                     lastBodyPosition = $(this).position().left;
+                    alert(lastBodyPosition);
                 }
             });
             $(document).on('#swyper', 'touchstop', function(event){
+
                 if(dragging)
                 {
                     dragging = false;
+                    /*
                     //slide into place
                     var posX = event.pageX;
                     if(posX < slideThreshold)
@@ -34,13 +37,15 @@
                     {
                         //slide back
                     }
+                    */
                 }
+
             });
             $(document).on('#swyper', 'touchmove', function(event){
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = event.pageX - lastMousePosition;
+                    var distance = event.touches[0].x - lastMousePosition;
                     $(this).css("left", (lastBodyPosition+distance));
                 }
                 event.preventDefault();
