@@ -16,7 +16,7 @@
         {
             $('#swyper').on('touchstart', function(event){
                 var e = event.originalEvent;
-                if(!dragging && e.touches.length == 1)
+                if(!dragging)
                 {
                     dragging = true;
                     startX = e.touches[0].pageX;
@@ -48,10 +48,10 @@
             $('#swyper').on('touchmove', function(event){
                 event.preventDefault();
                 var e = event.originalEvent;
-                if(dragging && e.touches.length == 1)
+                if(dragging)
                 {
                     //drag the swype-body
-                    var curX = curX+(e.touches[0].pageX - startX);
+                    curX = curX+(e.touches[0].pageX - startX);
                     $('#swyper').css('-webkit-transform', 'translate('+curX+'px, 0px)');
                 }
             });
