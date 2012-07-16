@@ -12,7 +12,7 @@
         {
             alert("touch available!");
             $('#swyper').on('touchstart', function(event){
-                if(!dragging)
+                if(!dragging && event.touches.length == 1)
                 {
                     dragging = true;
                     lastMousePosition = event.touches[0].x;
