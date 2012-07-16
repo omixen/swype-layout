@@ -15,9 +15,8 @@
                 if(!dragging && e.touches.length == 1)
                 {
                     dragging = true;
-                    lastMousePosition = e.touches[0].x;
+                    lastMousePosition = e.touches[0].pageX;
                     lastBodyPosition = $('#swyper').position().left;
-                    alert(e.touches[0].x);
                 }
             });
             $('#swyper').on('touchstop', function(event){
@@ -47,7 +46,7 @@
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = e.touches[0].x - lastMousePosition;
+                    var distance = e.touches[0].pageX - lastMousePosition;
                     $('#swyper').css("left", (lastBodyPosition+distance));
                 }
                 e.preventDefault();
