@@ -51,7 +51,7 @@
                 if(dragging)
                 {
                     //drag the swype-body
-                    curX = (e.touches[0].pageX - startX);
+                    curX = curX-(startX-e.touches[0].pageX);
                     $('#swyper').css('-webkit-transform', 'translate('+curX+'px, 0px)');
                 }
             });
