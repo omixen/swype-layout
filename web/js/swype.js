@@ -3,8 +3,7 @@
     var windowWidth = $(window).width();
     var slideThreshold = 100;
     var current = 0;
-    var lastBodyPosition = 0;
-    var lastMousePosition = 0;
+    var startX = 0;
     //no need to use pageinit here, we are not using any ajax request
     $(document).ready(function() {
         //dragging of swype-body within swype-container
@@ -15,7 +14,7 @@
                 if(!dragging && e.touches.length == 1)
                 {
                     dragging = true;
-                    lastMousePosition = e.touches[0].pageX;
+                    startX = e.touches[0].pageX;
                     lastBodyPosition = $('#swyper').position().left;
                 }
             });
@@ -42,14 +41,14 @@
 
             });
             $('#swyper').on('touchmove', function(event){
+                event.preventDefault();
                 var e = event.originalEvent;
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = e.touches[0].pageX - lastMousePosition;
-                    $('#swyper').css("left", (lastBodyPosition+distance));
+                    var distance = e.touches[0].pageX - startX;
+                    $('#swyper').css('-webkit-transform', 'translate('+distance+'px, 0px)');
                 }
-                e.preventDefault();
             });
         }else
         {
