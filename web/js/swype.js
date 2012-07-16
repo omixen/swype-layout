@@ -11,21 +11,23 @@
         if(Modernizr.touch)
         {
             $('#swyper').on('touchstart', function(event){
-                alert(dragging+ " " +event.touches.length+ " "+event.touches[0].x+$('#swyper').position().left);
-                if(!dragging && event.touches.length == 1)
+                var e = event.originalEvent;
+                alert(dragging+ " " +e.touches.length+ " "+e.touches[0].x+$('#swyper').position().left);
+                if(!dragging && e.touches.length == 1)
                 {
                     dragging = true;
-                    lastMousePosition = event.touches[0].x;
+                    lastMousePosition = e.touches[0].x;
                     lastBodyPosition = $('#swyper').position().left;
-                    alert(event.touches[0].x);
+                    alert(e.touches[0].x);
                 }
             });
             $('#swyper').on('touchstop', function(event){
-                alert(dragging+ " " +event.touches.length+ " "+event.touches[0].x+$('#swyper').position().left);
+                var e = event.originalEvent;
+                alert(dragging+ " " +e.touches.length+ " "+e.touches[0].x+$('#swyper').position().left);
                 if(dragging)
                 {
                     dragging = false;
-                    alert(event.touches[0].x-lastMousePosition);
+                    alert(e.touches[0].x-lastMousePosition);
                      /*
                     //slide into place
                     var posX = event.pageX;
@@ -44,13 +46,14 @@
 
             });
             $('#swyper').on('touchmove', function(event){
+                var e = event.originalEvent;
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = event.touches[0].x - lastMousePosition;
+                    var distance = e.touches[0].x - lastMousePosition;
                     $('#swyper').css("left", (lastBodyPosition+distance));
                 }
-                event.preventDefault();
+                e.preventDefault();
             });
         }else
         {
