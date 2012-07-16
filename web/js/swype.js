@@ -43,9 +43,15 @@
             {
                 //drag the swype-body
                 var distance = event.pageX - lastMousePosition;
-                $(this).css("left", (lastBodyPosition+distance));s
+                $(this).css("left", (lastBodyPosition+distance));
             }
+            event.preventDefault();
         });
+    }else
+    {
+        //show next and prev button
+
+        //bind click event
     }
 
 })(jQuery);
