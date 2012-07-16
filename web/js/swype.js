@@ -6,7 +6,7 @@
     var lastBodyPosition = 0;
     var lastMousePosition = 0;
     //no need to use pageinit here, we are not using any ajax request
-    $(document).on('pageinit', function() {
+    $(document).ready(function() {
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
@@ -27,7 +27,7 @@
                 {
                     dragging = false;
                     alert(event.touches[0].x);
-                    /*
+                     /*
                     //slide into place
                     var posX = event.pageX;
                     if(posX < slideThreshold)
