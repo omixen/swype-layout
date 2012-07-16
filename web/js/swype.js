@@ -12,7 +12,6 @@
         {
             $('#swyper').on('touchstart', function(event){
                 var e = event.originalEvent;
-                alert(dragging+ " " +e.touches.length+ " "+e.touches[0].x+$('#swyper').position().left);
                 if(!dragging && e.touches.length == 1)
                 {
                     dragging = true;
@@ -23,11 +22,9 @@
             });
             $('#swyper').on('touchstop', function(event){
                 var e = event.originalEvent;
-                alert(dragging+ " " +e.touches.length+ " "+e.touches[0].x+$('#swyper').position().left);
                 if(dragging)
                 {
                     dragging = false;
-                    alert(e.touches[0].x-lastMousePosition);
                      /*
                     //slide into place
                     var posX = event.pageX;
