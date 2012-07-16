@@ -6,12 +6,13 @@
     var lastBodyPosition = 0;
     var lastMousePosition = 0;
     //no need to use pageinit here, we are not using any ajax request
-    $(document).ready(function() {
+    $(document).on('pageinit', function() {
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
             alert("touch available!");
             $(document).on('#swyper', 'touchstart', function(event){
+                alert($('#swyper').position().left);
                 if(!dragging)
                 {
                     dragging = true;
@@ -21,6 +22,7 @@
                 }
             });
             $(document).on('#swyper', 'touchstop', function(event){
+                alert($('#swyper').position().left);
                 if(dragging)
                 {
                     dragging = false;
