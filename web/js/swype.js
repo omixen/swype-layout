@@ -4,23 +4,26 @@
     var slideThreshold = 100;
     var current = 0;
     var startX = 0;
+    var startTouchTime = 0;
+    var leftPadding = 450;
+    var eachElement = 900;
+    var noElement = 3;
+    var totalWidth = noElement*eachElement;
     //no need to use pageinit here, we are not using any ajax request
     $(document).ready(function() {
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
             $('#swyper').on('touchstart', function(event){
-                event.preventDefault();
                 var e = event.originalEvent;
                 if(!dragging && e.touches.length == 1)
                 {
                     dragging = true;
                     startX = e.touches[0].pageX;
-                    lastBodyPosition = $('#swyper').position().left;
+                    startTouchTime = Number(new Date());
                 }
             });
             $('#swyper').on('touchstop', function(event){
-                event.preventDefault();
                 var e = event.originalEvent;
                 if(dragging)
                 {
@@ -48,8 +51,8 @@
                 if(dragging)
                 {
                     //drag the swype-body
-                    var distance = e.touches[0].pageX - startX;
-                    $('#swyper').css('-webkit-transform', 'translate('+distance+'px, 0px)');
+                    var distance = (e.touches[0].pageX - startX)/totalWidth;
+                    $('#swyper').css('-webkit-transform', 'translate('+(leftPadding+distance)+'px, 0px)');
                 }
             });
         }else
