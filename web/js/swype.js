@@ -48,11 +48,11 @@
             $('#swyper').on('touchmove', function(event){
                 event.preventDefault();
                 var e = event.originalEvent;
-                if(dragging)
+                if(dragging && e.touches.length == 1)
                 {
                     //drag the swype-body
                     var curX = curX+(e.touches[0].pageX - startX);
-                    $('#swyper').css('-webkit-transform', 'translate('+(curX)+'px, 0px)');
+                    $('#swyper').css('-webkit-transform', 'translate('+curX+'px, 0px)');
                 }
             });
         }else
