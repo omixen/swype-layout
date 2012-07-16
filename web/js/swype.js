@@ -12,7 +12,7 @@
     //dragging of swype-body within swype-container
     if(Modernizr.touch)
     {
-        $("#swyper").live('ontouchstart', function(event){
+        $("#swyper").live('touchstart', function(event){
             if(!dragging)
             {
                 dragging = true;
@@ -20,7 +20,7 @@
                 lastBodyPosition = $(this).position().left;
             }
         });
-        $("#swyper").live('ontouchstop', function(event){
+        $("#swyper").live('touchstop', function(event){
             if(dragging)
             {
                 dragging = false;
@@ -38,7 +38,7 @@
                 }
             }
         });
-        $("#swyper").live('ontouchmove', function(event){
+        $("#swyper").live('touchmove', function(event){
             if(dragging)
             {
                 //drag the swype-body
