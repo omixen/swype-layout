@@ -11,7 +11,7 @@
         if(Modernizr.touch)
         {
             alert("touch available!");
-            $(document).on('#swyper', 'touchstart', function(event){
+            $('#swyper').on('touchstart', function(event){
                 alert($('#swyper').position().left);
                 if(!dragging)
                 {
@@ -21,7 +21,7 @@
                     alert(event.touches[0].x);
                 }
             });
-            $(document).on('#swyper', 'touchstop', function(event){
+            $('#swyper').on('touchstop', function(event){
                 alert($('#swyper').position().left);
                 if(dragging)
                 {
@@ -44,7 +44,7 @@
                 }
 
             });
-            $(document).on('#swyper', 'touchmove', function(event){
+            $('#swyper').on('touchmove', function(event){
                 if(dragging)
                 {
                     //drag the swype-body
