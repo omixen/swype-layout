@@ -4,4 +4,6 @@ Swype Layout
 * Suitable for micro-website.
 
 Using some awesome stuff from:
+* jQuery
 * Twitter Bootstrap
+* Modernizr

@@ -22,11 +22,16 @@ var slideThreshold = 100;
 var startX = 0;
 var curX = 0;
 var startTouchTime = 0;
-var leftPadding = 450;
 var eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
 var currentSlide = 0;
-var noElement = 3;
+var currentPosition = 0;
+var noElement = 5;
 var totalWidth = noElement*eachElement;
+var maxWidth = 500;
+var panelMargin = 20;
+var maxSlideLeft = -totalWidth-eachElement;
+var maxSlideRight = 0;
+var slideThreshold = eachElement/2;
 
 (function($) {
     //no need to use pageinit here, we are not using any ajax request
@@ -37,7 +42,7 @@ var totalWidth = noElement*eachElement;
         {
             resize();
         });
-        /*
+        
         //dragging of swype-body within swype-container
         if(Modernizr.touch)
         {
@@ -99,32 +104,71 @@ var totalWidth = noElement*eachElement;
                 if(dragging)
                 {
                     dragging = false;
+                    var touchTime = Number(new Date())-startTouchTime;
+                    
+                    var mouseDistanceAbs = Math.abs(event.pageX-startX);
+                    var newPosition = currentPosition+(mouseDistanceAbs*0.2);
+                    var positionDistance = (newPosition-currentPosition);
+                    
+                    var leftSlide = (event.pageX>startX);
+                    var rightSlide = (event.pageX<startX);
+                    var fastOne = (positionDistance>200 && touchTime<500);
+                    var bigOne = (positionDistance>slideThreshold);
+                    //was it a swype?
+                    var toSlide = currentSlide;
+                    if(rightSlide && (fastOne || bigOne))
+                    {
+                        toSlide = Math.abs(Math.floor(currentPosition/eachElement));                        
+                    }else if(leftSlide && (fastOne || bigOne))
+                    {
+                        toSlide = Math.abs(Math.ceil(currentPosition/eachElement));                        
+                    }
+                    slide(toSlide);                        
                 }
             });
             $('#swyper').on('mousemove', function(event){
                 event.preventDefault();
                 if(dragging)
                 {
-                    distance = event.pageX-startX;
-                    curX = (distance)/(Math.abs(distance)/eachElement+1);
-                    $('#swyper').css(transformEventName, 'translateX('+(leftPadding+curX-2*eachElement)+'px)');
+                    var mouseDistance = event.pageX-startX;
+                    var newPosition = currentPosition+(mouseDistance*0.2);
+                    if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
+                    {
+                        currentPosition = newPosition;
+                        $('#swyper').css(transitionDurationName, '0s');
+                        $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
+                        //was it too much already?                        
+                    }
                 }
             });
-        }*/
+        }
     });
 })(jQuery)
 
 function slide(index)
 {
-    $('#swyper').css(transformEventName, 'translateX('+(-index*eachElement)+'px)');
-    $('#swyper').css(transitionDurationName, '0.8s');
     currentSlide = index;
+    currentPosition = -index*eachElement;
+    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
+    $('#swyper').css(transitionDurationName, '0.8s');
 }
 function resize()
 {
+    var goodWidth = (maxWidth < 1 || $(document).width() < maxWidth) ? $(document).width() : maxWidth;
+    var goodMargin = (($(document).width()-goodWidth)/2);
+    //resize
     $('#swyper .swype-panel').each(function() {
-        $(this).css('width', $(document).width()-40);
+        $(this).css('width', goodWidth-goodMargin);
+        $(this).css('margin-left', goodMargin);
+        $(this).css('margin-right', goodMargin);
     });
+    //recalculate
     eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
+    totalWidth = noElement*eachElement;
+    maxSlideLeft = -(totalWidth-eachElement);
+    maxSlideRight = 0;
+    slideThreshold = eachElement/4;
+    //slide back
+    $('#swyper').css('width', totalWidth);
     slide(currentSlide);
 }
