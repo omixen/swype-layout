@@ -131,7 +131,6 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     {
                         toSlide--;
                     }
-                    var which = leftSlide ? 'left' : (rightSlide ? 'right' : 'none');
                     slide(toSlide);
                 }
             });
@@ -157,8 +156,8 @@ function slide(index)
 {
     currentSlide = index;
     currentPosition = -((index*eachElement)+outerMargin);
-    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px) ease-in');
-    $('#swyper').css(transitionDurationName, '0.5s');
+    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
+    $('#swyper').css(transitionDurationName, 'all 0.5s ease-in');
 }
 function resize()
 {
