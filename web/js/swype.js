@@ -54,7 +54,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                 if(!dragging && e.touches.length)
                 {
                     dragging = true;
-                    startX = e.touches[0].clientX;
+                    startX = getTouchX(e);
                     startTouchTime = Number(new Date());
                 }
             });
@@ -65,9 +65,9 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     dragging = false;
                     currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
-                    var mouseDistanceAbs = Math.abs(e.touches[0].clientX-startX);
-                    var rightSlide = (e.touches[0].clientX>startX);
-                    var leftSlide = (e.touches[0].clientX<startX);
+                    var mouseDistanceAbs = Math.abs(getTouchX(e)-startX);
+                    var rightSlide = (getTouchX(e)>startX);
+                    var leftSlide = (getTouchX(e)<startX);
                     var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
                     var bigOne = (mouseDistanceAbs>bigThreshold);
                     //was it a swype?
@@ -88,7 +88,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                 e.preventDefault();
                 if(dragging && e.touches.length)
                 {
-                    var mouseDistance = e.touches[0].clientX-startX;
+                    var mouseDistance = getTouchX(e)-startX;
                     newPosition = mouseDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
@@ -180,4 +180,14 @@ function resize()
     //slide back
     $('#swyper').css({'width':totalWidth, 'padding-left':outerMargin, 'padding-right':outerMargin });
     slide(currentSlide);
+}
+function getTouchX(e)
+{
+    if(e.touches)
+    {
+        return e.touches[0].clientX;
+    }else
+    {
+        return e.clientX;
+    }
 }
