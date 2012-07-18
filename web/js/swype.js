@@ -22,6 +22,7 @@ var dragging = false;
 var currentSlide = 0;
 var currentPosition = 0;
 var newPosition = 0;
+var touchDistance = 0;
 //inits
 var noElement = 5;
 //to be recalculated
@@ -65,11 +66,11 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     dragging = false;
                     currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
-                    var mouseDistanceAbs = Math.abs(getTouchX(e)-startX);
-                    var rightSlide = (getTouchX(e)>startX);
-                    var leftSlide = (getTouchX(e)<startX);
-                    var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
-                    var bigOne = (mouseDistanceAbs>bigThreshold);
+                    var touchDistanceAbs = Math.abs(touchDistance);
+                    var rightSlide = touchDistance>0;
+                    var leftSlide = touchDistance<0;
+                    var fastOne = (touchDistanceAbs>fastDistance && touchTime<fastTime);
+                    var bigOne = (touchDistanceAbs>bigThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
                     if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
@@ -87,8 +88,8 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                 e.preventDefault();
                 if(dragging)
                 {
-                    var mouseDistance = getTouchX(e)-startX;
-                    newPosition = mouseDistance+currentPosition;
+                    touchDistance = getTouchX(e)-startX;
+                    newPosition = touchDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
                         $('#swyper').css(transitionDurationName, '0s');
@@ -116,11 +117,11 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     dragging = false;
                     currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
-                    var mouseDistanceAbs = Math.abs(event.pageX-startX);
-                    var rightSlide = (event.pageX>startX);
-                    var leftSlide = (event.pageX<startX);
-                    var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
-                    var bigOne = (mouseDistanceAbs>bigThreshold);
+                    var touchDistanceAbs = Math.abs(touchDistance);
+                    var rightSlide = touchDistance>0;
+                    var leftSlide = touchDistance<0;
+                    var fastOne = (touchDistanceAbs>fastDistance && touchTime<fastTime);
+                    var bigOne = (touchDistanceAbs>bigThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
                     if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
@@ -138,8 +139,8 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                 event.preventDefault();
                 if(dragging)
                 {
-                    var mouseDistance = event.pageX-startX;
-                    newPosition = mouseDistance+currentPosition;
+                    touchDistance = event.pageX-startX;
+                    newPosition = touchDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
                         $('#swyper').css(transitionDurationName, '0s');
