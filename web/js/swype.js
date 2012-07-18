@@ -84,8 +84,8 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                 }
             });
             $('#swyper').on('touchmove', function(event){
-                event.preventDefault();
                 var e = event.originalEvent;
+                e.preventDefault();
                 if(dragging && e.touches.length==1)
                 {
                     var mouseDistance = e.touches[0].pageX-startX;
