@@ -1,4 +1,4 @@
-
+//css3 transformations
 var transformEventNames = {
     'WebkitTransform' : '-webkit-transform',
     'MozTransform'    : '-moz-transform',
@@ -15,24 +15,26 @@ var transitionDurationNames = {
     'Transition-duration'     : 'transition-duration'
 },
 transitionDurationName = transitionDurationNames[ Modernizr.prefixed('transition-duration') ];
-
-var dragging = false;
-var windowWidth = $(window).width();
-var slideThreshold = 100;
+//helpers
 var startX = 0;
-var curX = 0;
 var startTouchTime = 0;
-var eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
+var dragging = false;
 var currentSlide = 0;
 var currentPosition = 0;
 var newPosition = 0;
+//inits
 var noElement = 5;
+//to be recalculated
+var eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
 var totalWidth = noElement*eachElement;
 var maxWidth = 500;
 var outerMargin = 20;
 var maxSlideLeft = -totalWidth-eachElement;
 var maxSlideRight = 0;
-var slideThreshold = eachElement/2;
+//detector
+var fastDistance = (Modernizr.touch) ? 50 : 100;
+var fastTime = (Modernizr.touch) ? 500 : 500;
+var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
 
 (function($) {
     //no need to use pageinit here, we are not using any ajax request
@@ -66,8 +68,8 @@ var slideThreshold = eachElement/2;
                     var mouseDistanceAbs = Math.abs(e.touches[0].pageX-startX);
                     var rightSlide = (e.touches[0].pageX>startX);
                     var leftSlide = (e.touches[0].pageX<startX);
-                    var fastOne = (mouseDistanceAbs>100 && touchTime<500);
-                    var bigOne = (mouseDistanceAbs>slideThreshold);
+                    var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
+                    var bigOne = (mouseDistanceAbs>bigThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
                     if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
@@ -118,8 +120,8 @@ var slideThreshold = eachElement/2;
                     var mouseDistanceAbs = Math.abs(event.pageX-startX);
                     var rightSlide = (event.pageX>startX);
                     var leftSlide = (event.pageX<startX);
-                    var fastOne = (mouseDistanceAbs>100 && touchTime<500);
-                    var bigOne = (mouseDistanceAbs>slideThreshold);
+                    var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
+                    var bigOne = (mouseDistanceAbs>bigThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
                     if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
