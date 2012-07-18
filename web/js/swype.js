@@ -49,7 +49,7 @@ var slideThreshold = eachElement/2;
         {
             $('#swyper').on('touchstart', function(event){
                 var e = event.originalEvent;
-                if(!dragging)
+                if(!dragging && e.touches.length==1)
                 {
                     dragging = true;
                     startX = e.touches[0].pageX;
@@ -58,34 +58,42 @@ var slideThreshold = eachElement/2;
             });
             $('#swyper').on('touchstop', function(event){
                 var e = event.originalEvent;
-                if(dragging)
+                if(dragging && e.touches.length==1)
                 {
                     dragging = false;
-
-                    //slide into place
-                    var posX = event.pageX;
-                    if(posX < slideThreshold)
+                    currentPosition = newPosition;
+                    var touchTime = Number(new Date())-startTouchTime;
+                    var mouseDistanceAbs = Math.abs(e.touches[0].pageX-startX);
+                    var rightSlide = (e.touches[0].pageX>startX);
+                    var leftSlide = (e.touches[0].pageX<startX);
+                    var fastOne = (mouseDistanceAbs>100 && touchTime<500);
+                    var bigOne = (mouseDistanceAbs>slideThreshold);
+                    //was it a swype?
+                    var toSlide = currentSlide;
+                    if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
                     {
-                        //slide to next if exist, if not slide back
-                    }else if(posX > windowWidth-slideThreshold)
+                        toSlide++
+                    }else if(rightSlide && (fastOne || bigOne) && toSlide>0)
                     {
-                        //slide to previous if exist, if not slide back
-                    }else
-                    {
-                        //slide back
+                        toSlide--;
                     }
-
+                    var which = leftSlide ? 'left' : (rightSlide ? 'right' : 'none');
+                    slide(toSlide);
                 }
-
             });
             $('#swyper').on('touchmove', function(event){
                 event.preventDefault();
                 var e = event.originalEvent;
-                if(dragging)
+                if(dragging && e.touches.length==1)
                 {
-                    //drag the swype-body
-                    curX = curX-(startX-e.touches[0].pageX);
-                    $('#swyper').css(transformEventName, 'translate('+curX+'px, 0px)');
+                    var mouseDistance = e.touches[0].pageX-startX;
+                    newPosition = mouseDistance+currentPosition;
+                    if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
+                    {
+                        $('#swyper').css(transitionDurationName, '0s');
+                        $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                        //was it too much already?
+                    }
                 }
             });
         }else
@@ -108,20 +116,21 @@ var slideThreshold = eachElement/2;
                     currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
                     var mouseDistanceAbs = Math.abs(event.pageX-startX);
-                    var leftSlide = (event.pageX>startX);
-                    var rightSlide = (event.pageX<startX);
+                    var rightSlide = (event.pageX>startX);
+                    var leftSlide = (event.pageX<startX);
                     var fastOne = (mouseDistanceAbs>100 && touchTime<500);
                     var bigOne = (mouseDistanceAbs>slideThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
-                    if(rightSlide && (fastOne || bigOne) && toSlide<noElement-1)
+                    if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
                     {
-                        toSlide = Math.abs(Math.floor(currentPosition/eachElement));                        
-                    }else if(leftSlide && (fastOne || bigOne) && toSlide>0)
+                        toSlide++
+                    }else if(rightSlide && (fastOne || bigOne) && toSlide>0)
                     {
-                        toSlide = Math.abs(Math.ceil(currentPosition/eachElement));                        
+                        toSlide--;
                     }
-                    slide(toSlide);                        
+                    var which = leftSlide ? 'left' : (rightSlide ? 'right' : 'none');
+                    slide(toSlide);
                 }
             });
             $('#swyper').on('mousemove', function(event){
@@ -130,7 +139,6 @@ var slideThreshold = eachElement/2;
                 {
                     var mouseDistance = event.pageX-startX;
                     newPosition = mouseDistance+currentPosition;
-                    //$("#debug").val( "mouseDistance: "+ mouseDistance+" currentPosition: "+currentPosition+" newPosition: "+newPosition+"\n"+ $("#debug").val());
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
                         $('#swyper').css(transitionDurationName, '0s');
@@ -146,7 +154,7 @@ var slideThreshold = eachElement/2;
 function slide(index)
 {
     currentSlide = index;
-    currentPosition = -index*eachElement;
+    currentPosition = -((index*eachElement)+outerMargin);
     $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
     $('#swyper').css(transitionDurationName, '0.8s');
 }
@@ -168,6 +176,6 @@ function resize()
     maxSlideRight = outerMargin;
     slideThreshold = eachElement/4;
     //slide back
-    $('#swyper').css('width', totalWidth);
+    $('#swyper').css({'width':totalWidth, 'padding-left':outerMargin, 'padding-right':outerMargin });
     slide(currentSlide);
 }
