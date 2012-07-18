@@ -7,14 +7,14 @@ var transformEventNames = {
     'Transform'     : 'transform'
 },
 transformEventName = transformEventNames[ Modernizr.prefixed('transform') ];
-var transitionDurationNames = {
-    'WebkitTransition-duration' : '-webkit-transition-duration',
-    'MozTransition-duration'    : '-moz-transition-duration',
-    'OTransition-duration'      : '-o-transition-duration',
-    'MsTransition-duration'     : '-ms-transition-duration',
-    'Transition-duration'     : 'transition-duration'
+var transitionNames = {
+    'WebkitTransition' : '-webkit-transition',
+        'OTransition'      : '-o-transition',
+    'MozTransition'    : '-moz-transition',
+    'MsTransition'     : '-ms-transition',
+    'Transition'     : 'transition'
 },
-transitionDurationName = transitionDurationNames[ Modernizr.prefixed('transition-duration') ];
+transitionName = transitionNames[ Modernizr.prefixed('transition-duration') ];
 //helpers
 var startX = 0;
 var startTouchTime = 0;
@@ -142,7 +142,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     newPosition = touchDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
-                        $('#swyper').css(transitionDurationName, '0s');
+                        $('#swyper').css(transitionName, 'all 0s linear');
                         $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
                         //was it too much already?                        
                     }
@@ -157,7 +157,7 @@ function slide(index)
     currentSlide = index;
     currentPosition = -((index*eachElement)+outerMargin);
     $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
-    $('#swyper').css(transitionDurationName, 'all 0.5s ease-in');
+    $('#swyper').css(transitionName, 'all 0.5s ease-in');
 }
 function resize()
 {
