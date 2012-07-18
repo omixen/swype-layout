@@ -169,7 +169,7 @@ function slide(index)
     currentSlide = index;
     currentPosition = -((index*eachElement)+outerMargin);
     $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
-    $('#swyper').css(transitionName, 'all 0.6s ease-out');
+    $('#swyper').css(transitionName, 'all 0.3s ease-out');
 }
 function resize()
 {
