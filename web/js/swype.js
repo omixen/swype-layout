@@ -25,10 +25,11 @@ var startTouchTime = 0;
 var eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
 var currentSlide = 0;
 var currentPosition = 0;
+var newPosition = 0;
 var noElement = 5;
 var totalWidth = noElement*eachElement;
 var maxWidth = 500;
-var panelMargin = 20;
+var outerMargin = 20;
 var maxSlideLeft = -totalWidth-eachElement;
 var maxSlideRight = 0;
 var slideThreshold = eachElement/2;
@@ -104,22 +105,19 @@ var slideThreshold = eachElement/2;
                 if(dragging)
                 {
                     dragging = false;
+                    currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
-                    
                     var mouseDistanceAbs = Math.abs(event.pageX-startX);
-                    var newPosition = currentPosition+(mouseDistanceAbs*0.15);
-                    var positionDistance = Math.abs(newPosition-currentPosition);
-                    
                     var leftSlide = (event.pageX>startX);
                     var rightSlide = (event.pageX<startX);
-                    var fastOne = (positionDistance>100 && touchTime<500);
-                    var bigOne = (positionDistance>slideThreshold);
+                    var fastOne = (mouseDistanceAbs>100 && touchTime<500);
+                    var bigOne = (mouseDistanceAbs>slideThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
-                    if(rightSlide && (fastOne || bigOne))
+                    if(rightSlide && (fastOne || bigOne) && toSlide<noElement-1)
                     {
                         toSlide = Math.abs(Math.floor(currentPosition/eachElement));                        
-                    }else if(leftSlide && (fastOne || bigOne))
+                    }else if(leftSlide && (fastOne || bigOne) && toSlide>0)
                     {
                         toSlide = Math.abs(Math.ceil(currentPosition/eachElement));                        
                     }
@@ -131,12 +129,12 @@ var slideThreshold = eachElement/2;
                 if(dragging)
                 {
                     var mouseDistance = event.pageX-startX;
-                    var newPosition = currentPosition+(mouseDistance*0.2);
+                    newPosition = mouseDistance+currentPosition;
+                    //$("#debug").val( "mouseDistance: "+ mouseDistance+" currentPosition: "+currentPosition+" newPosition: "+newPosition+"\n"+ $("#debug").val());
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
-                        currentPosition = newPosition;
                         $('#swyper').css(transitionDurationName, '0s');
-                        $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
+                        $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
                         //was it too much already?                        
                     }
                 }
@@ -158,15 +156,16 @@ function resize()
     var goodMargin = (($(document).width()-goodWidth)/2);
     //resize
     $('#swyper .swype-panel').each(function() {
-        $(this).css('width', goodWidth-goodMargin);
+        $(this).css('width', goodWidth);
         $(this).css('margin-left', goodMargin);
         $(this).css('margin-right', goodMargin);
     });
     //recalculate
     eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
-    totalWidth = noElement*eachElement;
-    maxSlideLeft = -(totalWidth-eachElement);
-    maxSlideRight = 0;
+    outerMargin = $(document).width()/2;
+    totalWidth = (2*outerMargin)+(noElement*eachElement);
+    maxSlideLeft = -((totalWidth-eachElement)+outerMargin);
+    maxSlideRight = outerMargin;
     slideThreshold = eachElement/4;
     //slide back
     $('#swyper').css('width', totalWidth);
