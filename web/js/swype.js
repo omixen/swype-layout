@@ -51,7 +51,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
         {
             $('#swyper').on('touchstart', function(event){
                 var e = event.originalEvent;
-                if(!dragging && e.touches.length)
+                if(!dragging)
                 {
                     dragging = true;
                     startX = getTouchX(e);
@@ -60,7 +60,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
             });
             $('#swyper').on('touchend', function(event){
                 var e = event.originalEvent;
-                if(dragging && e.touches.length)
+                if(dragging)
                 {
                     dragging = false;
                     currentPosition = newPosition;
@@ -86,7 +86,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
             $('#swyper').on('touchmove', function(event){
                 var e = event.originalEvent;
                 e.preventDefault();
-                if(dragging && e.touches.length)
+                if(dragging)
                 {
                     var mouseDistance = getTouchX(e)-startX;
                     newPosition = mouseDistance+currentPosition;
