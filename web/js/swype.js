@@ -92,8 +92,14 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     newPosition = touchDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
-                        $('#swyper').css(transitionDurationName, '0s');
-                        $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                        $('#swyper').css(transitionName, 'all 0s linear');
+                        if(Modernizr.csstransforms3d)
+                        {
+                            $('#swyper').css(transformEventName, 'translate3d('+newPosition+'px,0,0)');
+                        }else
+                        {
+                            $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                        }
                         //was it too much already?
                     }
                 }
@@ -143,7 +149,13 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
                         $('#swyper').css(transitionName, 'all 0s linear');
-                        $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                        if(Modernizr.csstransforms3d)
+                        {
+                            $('#swyper').css(transformEventName, 'translate3d('+newPosition+'px,0,0)');
+                        }else
+                        {
+                            $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                        }
                         //was it too much already?                        
                     }
                 }
