@@ -107,12 +107,12 @@ var slideThreshold = eachElement/2;
                     var touchTime = Number(new Date())-startTouchTime;
                     
                     var mouseDistanceAbs = Math.abs(event.pageX-startX);
-                    var newPosition = currentPosition+(mouseDistanceAbs*0.2);
-                    var positionDistance = (newPosition-currentPosition);
+                    var newPosition = currentPosition+(mouseDistanceAbs*0.15);
+                    var positionDistance = Math.abs(newPosition-currentPosition);
                     
                     var leftSlide = (event.pageX>startX);
                     var rightSlide = (event.pageX<startX);
-                    var fastOne = (positionDistance>200 && touchTime<500);
+                    var fastOne = (positionDistance>100 && touchTime<500);
                     var bigOne = (positionDistance>slideThreshold);
                     //was it a swype?
                     var toSlide = currentSlide;
