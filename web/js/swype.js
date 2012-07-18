@@ -9,12 +9,12 @@ var transformEventNames = {
 transformEventName = transformEventNames[ Modernizr.prefixed('transform') ];
 var transitionNames = {
     'WebkitTransition' : '-webkit-transition',
-        'OTransition'      : '-o-transition',
+    'OTransition'      : '-o-transition',
     'MozTransition'    : '-moz-transition',
     'MsTransition'     : '-ms-transition',
     'Transition'     : 'transition'
 },
-transitionName = transitionNames[ Modernizr.prefixed('transition-duration') ];
+transitionName = transitionNames[ Modernizr.prefixed('transition') ];
 //helpers
 var startX = 0;
 var startTouchTime = 0;
