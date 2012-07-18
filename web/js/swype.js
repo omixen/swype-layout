@@ -157,8 +157,8 @@ function slide(index)
 {
     currentSlide = index;
     currentPosition = -((index*eachElement)+outerMargin);
-    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
-    $('#swyper').css(transitionDurationName, '0.8s');
+    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px) ease-in');
+    $('#swyper').css(transitionDurationName, '0.5s');
 }
 function resize()
 {
