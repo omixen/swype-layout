@@ -51,23 +51,23 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
         {
             $('#swyper').on('touchstart', function(event){
                 var e = event.originalEvent;
-                if(!dragging && e.touches.length==1)
+                if(!dragging && e.touches.length)
                 {
                     dragging = true;
-                    startX = e.touches[0].pageX;
+                    startX = e.touches[0].clientX;
                     startTouchTime = Number(new Date());
                 }
             });
             $('#swyper').on('touchend', function(event){
                 var e = event.originalEvent;
-                if(dragging && e.touches.length==1)
+                if(dragging && e.touches.length)
                 {
                     dragging = false;
                     currentPosition = newPosition;
                     var touchTime = Number(new Date())-startTouchTime;
-                    var mouseDistanceAbs = Math.abs(e.touches[0].pageX-startX);
-                    var rightSlide = (e.touches[0].pageX>startX);
-                    var leftSlide = (e.touches[0].pageX<startX);
+                    var mouseDistanceAbs = Math.abs(e.touches[0].clientX-startX);
+                    var rightSlide = (e.touches[0].clientX>startX);
+                    var leftSlide = (e.touches[0].clientX<startX);
                     var fastOne = (mouseDistanceAbs>fastDistance && touchTime<fastTime);
                     var bigOne = (mouseDistanceAbs>bigThreshold);
                     //was it a swype?
@@ -86,9 +86,9 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
             $('#swyper').on('touchmove', function(event){
                 var e = event.originalEvent;
                 e.preventDefault();
-                if(dragging && e.touches.length==1)
+                if(dragging && e.touches.length)
                 {
-                    var mouseDistance = e.touches[0].pageX-startX;
+                    var mouseDistance = e.touches[0].clientX-startX;
                     newPosition = mouseDistance+currentPosition;
                     if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
                     {
