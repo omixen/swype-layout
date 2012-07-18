@@ -58,7 +58,7 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     startTouchTime = Number(new Date());
                 }
             });
-            $('#swyper').on('touchstop', function(event){
+            $('#swyper').on('touchend', function(event){
                 var e = event.originalEvent;
                 if(dragging && e.touches.length==1)
                 {
