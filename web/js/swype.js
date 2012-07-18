@@ -79,7 +79,6 @@ var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
                     {
                         toSlide--;
                     }
-                    var which = leftSlide ? 'left' : (rightSlide ? 'right' : 'none');
                     slide(toSlide);
                 }
             });
@@ -176,7 +175,7 @@ function resize()
     totalWidth = (2*outerMargin)+(noElement*eachElement);
     maxSlideLeft = -((totalWidth-eachElement)+outerMargin);
     maxSlideRight = outerMargin;
-    slideThreshold = eachElement/4;
+    bigThreshold = eachElement/4;
     //slide back
     $('#swyper').css({'width':totalWidth, 'padding-left':outerMargin, 'padding-right':outerMargin });
     slide(currentSlide);
