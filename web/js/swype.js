@@ -164,7 +164,7 @@ function resize()
     var goodMargin = (($(document).width()-goodWidth)/2);
     //resize
     $('#swyper .swype-panel').each(function() {
-        $(this).css('width', goodWidth);
+        $(this).css('width', goodWidth-20);
         $(this).css('margin-left', goodMargin);
         $(this).css('margin-right', goodMargin);
     });
