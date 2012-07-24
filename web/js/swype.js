@@ -75,15 +75,15 @@
                     //dragging of swype-body within swype-container
                     if(Modernizr.touch)
                     {
-                        $('body').on('touchstart', function(event){
+                        $(document.body).on('touchstart', function(event){
                             var e = event.originalEvent;
                             methods._startDrag(e);
                         });
-                        $('body').on('touchend', function(event){
+                        $(document.body).on('touchend', function(event){
                             var e = event.originalEvent;
                             methods._stopDrag(e);
                         });
-                        $('body').on('touchmove', function(event){
+                        $(document.body).on('touchmove', function(event){
                             var e = event.originalEvent;
                             e.preventDefault();
                             methods._onDrag(e);
@@ -95,13 +95,13 @@
                         //bind click event
                         if(settings.enableWebSwype)
                         {
-                            $('body').on('mousedown', function(event){
+                            $(document.body).on('mousedown', function(event){
                                 methods._startDrag(event);
                             });
-                            $('body').on('mouseup', function(event){
+                            $(document.body).on('mouseup', function(event){
                                 methods._stopDrag(event);
                             });
-                            $('body').on('mousemove', function(event){
+                            $(document.body).on('mousemove', function(event){
                                 event.preventDefault();
                                 methods._onDrag(event);
                             });
@@ -132,7 +132,7 @@
                 data.totalWidth = (2*data.outerMargin)+(data.noElement*data.eachElement);
                 data.maxSlideLeft = -((data.totalWidth-data.eachElement)+data.outerMargin);
                 data.maxSlideRight = data.outerMargin;
-                data.bigThreshold = data.eachElement/4;
+                settings.bigThreshold = data.eachElement/4;
                 //slide back
                 $(settings.selector).css({'width':data.totalWidth, 'padding-left':data.outerMargin, 'padding-right':data.outerMargin });
                 methods.slide(data.currentSlide);
