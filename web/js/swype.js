@@ -1,204 +1,236 @@
-//css3 transformations
-var transformEventNames = {
-    'WebkitTransform' : '-webkit-transform',
-    'MozTransform'    : '-moz-transform',
-    'OTransform'      : '-o-transform',
-    'MsTransform'     : '-ms-transform',
-    'Transform'     : 'transform'
-},
-transformEventName = transformEventNames[ Modernizr.prefixed('transform') ];
-var transitionNames = {
-    'WebkitTransition' : '-webkit-transition',
-    'OTransition'      : '-o-transition',
-    'MozTransition'    : '-moz-transition',
-    'MsTransition'     : '-ms-transition',
-    'Transition'     : 'transition'
-},
-transitionName = transitionNames[ Modernizr.prefixed('transition') ];
-//helpers
-var startX = 0;
-var startTouchTime = 0;
-var dragging = false;
-var currentSlide = 0;
-var currentPosition = 0;
-var newPosition = 0;
-var touchDistance = 0;
-//inits
-var noElement = 5;
-//to be recalculated
-var eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
-var totalWidth = noElement*eachElement;
-var maxWidth = 500;
-var outerMargin = 20;
-var maxSlideLeft = -totalWidth-eachElement;
-var maxSlideRight = 0;
-//detector
-var fastDistance = (Modernizr.touch) ? 50 : 100;
-var fastTime = (Modernizr.touch) ? 500 : 500;
-var bigThreshold = (Modernizr.touch) ? eachElement/4 : eachElement/2;
+
+
 
 (function($) {
-    //no need to use pageinit here, we are not using any ajax request
-    $(document).ready(function() {
-        //initiate widths and x-positions of the panel
-        resize();
-        $(window).on('resize', function(e)
-        {
-            resize();
-        });
-        
-        //dragging of swype-body within swype-container
-        if(Modernizr.touch)
-        {
-            $('#swyper').on('touchstart', function(event){
-                var e = event.originalEvent;
-                if(!dragging)
-                {
-                    dragging = true;
-                    startX = getTouchX(e);
-                    startTouchTime = Number(new Date());
-                }
-            });
-            $('#swyper').on('touchend', function(event){
-                var e = event.originalEvent;
-                if(dragging)
-                {
-                    dragging = false;
-                    currentPosition = newPosition;
-                    var touchTime = Number(new Date())-startTouchTime;
-                    var touchDistanceAbs = Math.abs(touchDistance);
-                    var rightSlide = touchDistance>0;
-                    var leftSlide = touchDistance<0;
-                    var fastOne = (touchDistanceAbs>fastDistance && touchTime<fastTime);
-                    var bigOne = (touchDistanceAbs>bigThreshold);
-                    //was it a swype?
-                    var toSlide = currentSlide;
-                    if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
-                    {
-                        toSlide++
-                    }else if(rightSlide && (fastOne || bigOne) && toSlide>0)
-                    {
-                        toSlide--;
-                    }
-                    slide(toSlide);
-                }
-            });
-            $('#swyper').on('touchmove', function(event){
-                var e = event.originalEvent;
-                e.preventDefault();
-                if(dragging)
-                {
-                    touchDistance = getTouchX(e)-startX;
-                    newPosition = touchDistance+currentPosition;
-                    if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
-                    {
-                        $('#swyper').css(transitionName, 'all 0s linear');
-                        if(Modernizr.csstransforms3d)
-                        {
-                            $('#swyper').css(transformEventName, 'translate3d('+newPosition+'px,0,0)');
-                        }else
-                        {
-                            $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
-                        }
-                        //was it too much already?
-                    }
-                }
-            });
-        }else
-        {
-            //show next and prev button
 
-            //bind click event
-            $('#swyper').on('mousedown', function(event){
-                if(!dragging)
+    var SwypeLayout = function(element, options)
+    {
+        //css3 transformations
+        var transformEventNames = {
+            'WebkitTransform'   : '-webkit-transform',
+            'MozTransform'      : '-moz-transform',
+            'OTransform'        : '-o-transform',
+            'MsTransform'       : '-ms-transform',
+            'Transform'         : 'transform'
+        },
+        transformEventName = transformEventNames[ Modernizr.prefixed('transform') ],
+        transitionNames = {
+            'WebkitTransition'  : '-webkit-transition',
+            'OTransition'       : '-o-transition',
+            'MozTransition'     : '-moz-transition',
+            'MsTransition'      : '-ms-transition',
+            'Transition'        : 'transition'
+         },
+        transitionName = transitionNames[ Modernizr.prefixed('transition') ],
+
+        //calculated data
+        data = {
+            //helpers
+            startX : 0,
+            startTouchTime : 0,
+            dragging : false,
+            currentSlide : 0,
+            currentPosition : 0,
+            newPosition : 0,
+            touchDistance : 0,
+            //init
+            noElement : 0,
+            //to be recalculated
+            eachElement : 0,
+            totalWidth : 0,
+            maxWidth : 500,
+            outerMargin : 20,
+            maxSlideLeft : 0,
+            maxSlideRight : 0
+        },
+
+        // Create some defaults, extending them with any options that were provided
+        settings = $.extend( {
+            'selector'          : null,
+            'enableWebSwype'    : true,
+            'slideTime'         : 0.5,
+            'slideEasing'       : 'ease-out',
+            'fastDistance'      : (Modernizr.touch) ? 50 : 100,
+            'fastTime'          : (Modernizr.touch) ? 500 : 500,
+            'bigThreshold'      : (Modernizr.touch) ? data.eachElement/4 : data.eachElement/2
+        }, options),
+
+        //available methods and private methods
+        methods = {
+            init: function()
+            {
+                //set the id
+                if(!settings.selector)
                 {
-                    dragging = true;
-                    startX = event.pageX;
-                    startTouchTime = Number(new Date());
+                    settings.selector = '#'+element.attr('id');
                 }
-            });
-            $('#swyper').on('mouseup', function(event){
-                if(dragging)
+                data.noElement = $(settings.selector+' > div').length;
+                methods.resize();
+                $(window).on('resize', function(e)
                 {
-                    dragging = false;
-                    currentPosition = newPosition;
-                    var touchTime = Number(new Date())-startTouchTime;
-                    var touchDistanceAbs = Math.abs(touchDistance);
-                    var rightSlide = touchDistance>0;
-                    var leftSlide = touchDistance<0;
-                    var fastOne = (touchDistanceAbs>fastDistance && touchTime<fastTime);
-                    var bigOne = (touchDistanceAbs>bigThreshold);
+                    methods.resize();
+                });
+
+                return this.each(function() {
+                    //dragging of swype-body within swype-container
+                    if(Modernizr.touch)
+                    {
+                        $('body').on('touchstart', function(event){
+                            var e = event.originalEvent;
+                            methods._startDrag(e);
+                        });
+                        $('body').on('touchend', function(event){
+                            var e = event.originalEvent;
+                            methods._stopDrag(e);
+                        });
+                        $('body').on('touchmove', function(event){
+                            var e = event.originalEvent;
+                            e.preventDefault();
+                            methods._onDrag(e);
+                        });
+                    }else
+                    {
+                        //show next and prev button
+
+                        //bind click event
+                        if(settings.enableWebSwype)
+                        {
+                            $('body').on('mousedown', function(event){
+                                methods._startDrag(event);
+                            });
+                            $('body').on('mouseup', function(event){
+                                methods._stopDrag(event);
+                            });
+                            $('body').on('mousemove', function(event){
+                                event.preventDefault();
+                                methods._onDrag(event);
+                            });
+                        }
+                    }
+                });
+            },
+            slide: function(index)
+            {
+                data.currentSlide = index;
+                data.currentPosition = -((index*data.eachElement)+data.outerMargin);
+                $(settings.selector).css(transformEventName, 'translateX('+data.currentPosition+'px)');
+                $(settings.selector).css(transitionName, 'all '+settings.slideTime+'s '+settings.slideEasing);
+            },
+            resize : function()
+            {
+                var goodWidth = (data.maxWidth < 1 || $(document).width() < data.maxWidth) ? $(document).width() : data.maxWidth;
+                var goodMargin = (($(document).width()-goodWidth)/2);
+                //resize
+                $(settings.selector+' > div').each(function() {
+                    $(this).css('width', goodWidth-20);
+                    $(this).css('margin-left', goodMargin);
+                    $(this).css('margin-right', goodMargin);
+                });
+                //recalculate
+                data.eachElement = $(settings.selector+' > div:first-child').outerWidth(true);
+                data.outerMargin = $(document).width()/2;
+                data.totalWidth = (2*data.outerMargin)+(data.noElement*data.eachElement);
+                data.maxSlideLeft = -((data.totalWidth-data.eachElement)+data.outerMargin);
+                data.maxSlideRight = data.outerMargin;
+                data.bigThreshold = data.eachElement/4;
+                //slide back
+                $(settings.selector).css({'width':data.totalWidth, 'padding-left':data.outerMargin, 'padding-right':data.outerMargin });
+                methods.slide(data.currentSlide);
+            },
+            _getTouchX : function(e)
+            {
+                if(Modernizr.touch)
+                {
+                    if(e.touches)
+                    {
+                        return e.touches[0].clientX;
+                    }else
+                    {
+                        return e.clientX;
+                    }
+                }else
+                {
+                    return e.pageX;
+                }
+            },
+            _startDrag: function(e)
+            {
+                if(!data.dragging)
+                {
+                    data.dragging = true;
+                    data.startX = methods._getTouchX(e);
+                    data.startTouchTime = Number(new Date());
+                }
+            },
+            _stopDrag: function(e)
+            {
+                if(data.dragging)
+                {
+                    data.dragging = false;
+                    data.currentPosition = data.newPosition;
+                    var touchTime = Number(new Date())-data.startTouchTime;
+                    var touchDistanceAbs = Math.abs(data.touchDistance);
+                    var rightSlide = data.touchDistance>0;
+                    var leftSlide = data.touchDistance<0;
+                    var fastOne = (touchDistanceAbs>settings.fastDistance && touchTime<settings.fastTime);
+                    var bigOne = (touchDistanceAbs>settings.bigThreshold);
                     //was it a swype?
-                    var toSlide = currentSlide;
-                    if(leftSlide && (fastOne || bigOne) && toSlide<noElement-1)
+                    var toSlide = data.currentSlide;
+                    if(leftSlide && (fastOne || bigOne) && toSlide<data.noElement-1)
                     {
                         toSlide++
                     }else if(rightSlide && (fastOne || bigOne) && toSlide>0)
                     {
                         toSlide--;
                     }
-                    slide(toSlide);
+                    methods.slide(toSlide);
                 }
-            });
-            $('#swyper').on('mousemove', function(event){
-                event.preventDefault();
-                if(dragging)
+            },
+            _onDrag: function(e)
+            {
+                if(data.dragging)
                 {
-                    touchDistance = event.pageX-startX;
-                    newPosition = touchDistance+currentPosition;
-                    if(newPosition>maxSlideLeft && newPosition<maxSlideRight)
+                    data.touchDistance = methods._getTouchX(e)-data.startX;
+                    data.newPosition = data.touchDistance+data.currentPosition;
+                    if(data.newPosition>data.maxSlideLeft && data.newPosition<data.maxSlideRight)
                     {
-                        $('#swyper').css(transitionName, 'all 0s linear');
+                        $(settings.selector).css(transitionName, 'all 0s linear');
                         if(Modernizr.csstransforms3d)
                         {
-                            $('#swyper').css(transformEventName, 'translate3d('+newPosition+'px,0,0)');
+                            $(settings.selector).css(transformEventName, 'translate3d('+data.newPosition+'px,0,0)');
                         }else
                         {
-                            $('#swyper').css(transformEventName, 'translateX('+newPosition+'px)');
+                            $(settings.selector).css(transformEventName, 'translateX('+data.newPosition+'px)');
                         }
-                        //was it too much already?                        
                     }
                 }
-            });
+            }
+        };
+        //so that we can call the methods like instance[method]
+        return methods;
+    }
+
+    $.fn.swype = function( options ) {
+        var element = this,
+            instance = element.data('swype');
+
+        if ( instance && instance[options] ) {
+            instance[options].apply( this, Array.prototype.slice.call( arguments, 1 ));
+            return element;
+        } else if ( typeof options === 'object' || ! options ) {
+            //already exists
+            if(instance) return;
+            //create a new one
+            var swypeInstance = new SwypeLayout(element, options);
+            element.data('swype', swypeInstance);
+            return swypeInstance.init.apply( this, arguments );
+        } else {
+            $.error( 'Method ' +  options + ' does not exist on jQuery.swype' );
         }
-    });
+    };
 })(jQuery)
 
-function slide(index)
-{
-    currentSlide = index;
-    currentPosition = -((index*eachElement)+outerMargin);
-    $('#swyper').css(transformEventName, 'translateX('+currentPosition+'px)');
-    $('#swyper').css(transitionName, 'all 0.3s ease-out');
-}
-function resize()
-{
-    var goodWidth = (maxWidth < 1 || $(document).width() < maxWidth) ? $(document).width() : maxWidth;
-    var goodMargin = (($(document).width()-goodWidth)/2);
-    //resize
-    $('#swyper .swype-panel').each(function() {
-        $(this).css('width', goodWidth-20);
-        $(this).css('margin-left', goodMargin);
-        $(this).css('margin-right', goodMargin);
-    });
-    //recalculate
-    eachElement = $('#swyper .swype-panel:first-child').outerWidth(true);
-    outerMargin = $(document).width()/2;
-    totalWidth = (2*outerMargin)+(noElement*eachElement);
-    maxSlideLeft = -((totalWidth-eachElement)+outerMargin);
-    maxSlideRight = outerMargin;
-    bigThreshold = eachElement/4;
-    //slide back
-    $('#swyper').css({'width':totalWidth, 'padding-left':outerMargin, 'padding-right':outerMargin });
-    slide(currentSlide);
-}
-function getTouchX(e)
-{
-    if(e.touches)
-    {
-        return e.touches[0].clientX;
-    }else
-    {
-        return e.clientX;
-    }
-}
+
+$(document).ready(function() {
+    $('#swyper').swype();
+});
